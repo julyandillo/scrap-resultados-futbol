@@ -21,14 +21,15 @@ class Rastreador(ABC):
 
     def envia(self, debug):
         """ envia el modelo del objeto en formato json al socket servidor """
-        objeto = json.dumps(self.modelo)
+        info = json.dumps(self.modelo)
 
         if debug is True:
-            print(objeto)
+            print(info)
         else:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as cliente:
-                cliente.connect((Util.host(), Util.puerto))
-                cliente.sendall(objeto)
+                cliente.connect((Util.host(), Util.puerto()))
+
+                cliente.send(info.encode())
 
     @abstractmethod
     def rastrea(self):

@@ -16,10 +16,10 @@ def main():
     valor = sys.argv[2]
 
     if rastreo == 'jornada':
-        """ se rastrea todos los partidos de la jornada pasada como argumento """
+        """ rastrea todos los partidos de la jornada pasada como argumento """
         pass
     elif rastreo == 'equipos':
-        """ se rastreara la informacion de todos los equipos """
+        """ rastrea la informacion de todos los equipos """
         for equipo in Util.lista_equipos().keys():
             print("Rastreando", equipo, "......")
             info_equipo = Equipo(Util.equipo_equivalente_rf(equipo))
@@ -28,8 +28,10 @@ def main():
             print("----------------------------------------------")
     else:
         """ se rastreara la informacion del equipo pasado como argumento """
+        print("Rastreando", rastreo, "......")
         equipo = Equipo(rastreo)
         equipo.rastrea()
+        equipo.envia(False)
 
 
 if __name__ == '__main__':
