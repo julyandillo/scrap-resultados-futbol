@@ -48,7 +48,7 @@ class Equipo(Rastreador):
             'presidente': presidente,
             'entrenador': entrenador,
             'estadio': {
-                'capadidad': int(capacidad),
+                'capacidad': int(capacidad),
                 'construccion': int(construccion),
                 'dimensiones': dimensiones
             }

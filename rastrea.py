@@ -1,6 +1,7 @@
 import sys
 
 from equipo import Equipo
+from plantilla import Plantilla
 from util import Util
 
 
@@ -27,11 +28,18 @@ def main():
             info_equipo.envia(True)
             print("----------------------------------------------")
     else:
-        """ se rastreara la informacion del equipo pasado como argumento """
-        print("Rastreando", rastreo, "......")
-        equipo = Equipo(rastreo)
-        equipo.rastrea()
-        equipo.envia(False)
+        if valor == 'info':
+            """ se rastreara la informacion del equipo pasado como argumento """
+            print("Rastreando", rastreo, "......")
+            equipo = Equipo(rastreo)
+            equipo.rastrea()
+            equipo.envia(True)
+        else:
+            """ se rastreara la plantilla del equipo pasado como argumento """
+            print("Rastreando plantilla de ", rastreo, "......")
+            plantilla = Plantilla(rastreo)
+            plantilla.rastrea()
+            print(plantilla.modelo)
 
 
 if __name__ == '__main__':
