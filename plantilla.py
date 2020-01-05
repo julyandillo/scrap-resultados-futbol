@@ -47,8 +47,14 @@ class Plantilla(Rastreador):
                 peso = int(info('td.dat').eq(1).text())
 
             imagen = info('.sdata_player_img>a>img').attr('src')
-            # hay algunos jugadores que no tienen el id en la url, pero siempre esta en la imagen
-            id_rf = imagen[:imagen.find('?')].split('/')[-1].split('.')[0]
+            """
+            hay algunos jugadores que no tienen el id en la url, pero esta en la imagen siempre y cuando 
+            la imagen no sea una por defecto (avatar-player.jpg), entonces el id se saca de la url
+            """
+            if 'avatar-player' not in imagen:
+                id_rf = imagen[:imagen.find('?')].split('/')[-1].split('.')[0]
+            else:
+                id_rf = url.split('-')[-1]
 
             # print(, info('.sdata_player_name>a').attr('href'))
             jugador = Jugador("https://www.resultados-futbol.com" + url)
