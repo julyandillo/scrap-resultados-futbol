@@ -4,6 +4,7 @@ import configparser
 
 class Util:
     __equipos = {}  # diccionario que almacenara los nombres de los equipos y el id de la base de datos
+    __equipos_pendientes = {}
 
     equipos_rf = {
         'Atletico-Madrid': 'Atlético',
@@ -37,7 +38,7 @@ class Util:
 
     @classmethod
     def lista_equipos(cls):
-        """ carga en una lista los nombres de los equipos de la base de datos """
+        """ carga en un diccionario los nombres de los equipos de la base de datos, lay key el nombre el valor el id """
         if len(cls.__equipos.keys()) == 0:
             bd = Mysql.conectar()
             bd.execute('SELECT nombre, id_equipo FROM equipo ORDER BY nombre')
@@ -45,6 +46,20 @@ class Util:
                 cls.__equipos[equipo['nombre']] = equipo['id_equipo']
 
         return cls.__equipos
+
+    @classmethod
+    def lista_equipos_sin_plantilla(cls):
+        """ carga en un diccionario los equipos que no tienen jugadores (key: valor, nombre: id) """
+        if len(cls.__equipos_pendientes.keys()) == 0:
+            bd = Mysql.conectar()
+            bd.execute("select id_equipo, nombre "
+                       "from equipo "
+                       "where id_equipo not in (select distinct id_equipo from jugador) "
+                       "order by nombre")
+            for equipo in bd.fetchall():
+                cls.__equipos_pendientes[equipo['nombre']] = equipo['id_equipo']
+
+        return cls.__equipos_pendientes
 
     @classmethod
     def load_ini(cls):

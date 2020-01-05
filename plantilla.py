@@ -27,16 +27,29 @@ class Plantilla(Rastreador):
         for fila in self.html("table.sdata_table>tbody>tr[itemprop='employee']"):
             info = PyQuery(fila)
 
-            dorsal = int(info('td').eq(0).text())
-            url = info('.sdata_player_name>a').attr('href')
             nombre = info('.sdata_player_name').text()
-            altura = int(info('td.dat').eq(0).text())
-            peso = int(info('td.dat').eq(1).text())
+            url = info('.sdata_player_name>a').attr('href')
+
+            """ hay jugadores que no tienen dorsal, peso o altura (muy pocos) si no tienen se quedan con este valor """
+            dorsal = 0
+            altura = 0
+            peso = 0
+
+            print("Rastreando", nombre, "......")
+
+            if info('td').eq(0).text().strip() != '':
+                dorsal = int(info('td').eq(0).text())
+
+            if info('td.dat').eq(0).text() != '-':
+                altura = int(info('td.dat').eq(0).text())
+
+            if info('td.dat').eq(1).text() != '-':
+                peso = int(info('td.dat').eq(1).text())
+
             imagen = info('.sdata_player_img>a>img').attr('src')
             # hay algunos jugadores que no tienen el id en la url, pero siempre esta en la imagen
             id_rf = imagen[:imagen.find('?')].split('/')[-1].split('.')[0]
 
-            print("Rastreando", nombre, "......")
             # print(, info('.sdata_player_name>a').attr('href'))
             jugador = Jugador("https://www.resultados-futbol.com" + url)
             jugador.rastrea()

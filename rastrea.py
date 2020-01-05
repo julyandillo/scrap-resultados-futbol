@@ -20,13 +20,21 @@ def main():
         """ rastrea todos los partidos de la jornada pasada como argumento """
         pass
     elif rastreo == 'equipos':
-        """ rastrea la informacion de todos los equipos """
-        for equipo in Util.lista_equipos().keys():
-            print("Rastreando", equipo, "......")
-            info_equipo = Equipo(Util.equipo_equivalente_rf(equipo))
-            info_equipo.rastrea()
-            info_equipo.envia(True)
-            print("----------------------------------------------")
+        if valor == 'info':
+            """ rastrea la informacion de todos los equipos """
+            for equipo in Util.lista_equipos().keys():
+                print("Rastreando", equipo, "......")
+                info_equipo = Equipo(Util.equipo_equivalente_rf(equipo))
+                info_equipo.rastrea()
+                info_equipo.envia(True)
+                print("----------------------------------------------")
+        else:
+            """ rastrea la plantilla de los equipos que no tienen jugadores """
+            for equipo in Util.lista_equipos_sin_plantilla().keys():
+                print("Rastreando plantilla de ", equipo, "......")
+                plantilla = Plantilla(Util.equipo_equivalente_rf(equipo))
+                plantilla.rastrea()
+                plantilla.envia(True)
     else:
         if valor == 'info':
             """ se rastreara la informacion del equipo pasado como argumento """
@@ -39,7 +47,7 @@ def main():
             print("Rastreando plantilla de ", rastreo, "......")
             plantilla = Plantilla(rastreo)
             plantilla.rastrea()
-            print(plantilla.modelo)
+            plantilla.envia(True)
 
 
 if __name__ == '__main__':

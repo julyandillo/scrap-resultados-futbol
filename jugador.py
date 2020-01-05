@@ -19,7 +19,7 @@ class Jugador(Rastreador):
         self.fecha_nacimiento = ''
         self.posicion = ''
 
-        self.__posiciones = {
+        self.__demarcacion = {
             'Portero': 'POR',
             'Defensa': 'DEF',
             'Centrocampista': 'MED',
@@ -27,9 +27,31 @@ class Jugador(Rastreador):
         }
 
     def rastrea(self):
+        """
+        primero hay que sacar la posicion que tiene el hijo que queremos obtener, por ejemplo hay algunos jugadores
+        que no tienen lugar de nacimiento, por lo que todas los hijos que iban detrás de este tendrán una pocición
+        menos que en los que si aparece
+        """
+        posicion = 0
+        posiciones = {}
+        for nodo in self.html("#pinfo>.contentitem>dl>dt"):
+            texto = PyQuery(nodo).text()
+            if texto == 'Completo':
+                posiciones['nombre_completo'] = posicion
+            elif texto == 'País':
+                posiciones['pais_nacimiento'] = posicion
+            elif texto == 'Nacionalidad':
+                posiciones['nacionalidad'] = posicion
+            elif texto == 'Fecha de nacimiento':
+                posiciones['fecha_nacimiento'] = posicion
+            elif texto == 'Demarcación':
+                posiciones['posicion'] = posicion
+
+            posicion += 1
+
         box = self.html("#pinfo>.contentitem>dl>dd")
-        self.nombre_completo = box.eq(1).text()
-        self.pais_nacimiento = box.eq(5).text()
-        self.nacionalidad = box.eq(6).text()
-        self.fecha_nacimiento = box.eq(3).text()
-        self.posicion = self.__posiciones[box.eq(7).text()]
+        self.nombre_completo = box.eq(posiciones['nombre_completo']).text()
+        self.pais_nacimiento = box.eq(posiciones['pais_nacimiento']).text()
+        self.nacionalidad = box.eq(posiciones['nacionalidad']).text()
+        self.fecha_nacimiento = box.eq(posiciones['fecha_nacimiento']).text()
+        self.posicion = self.__demarcacion[box.eq(posiciones['posicion']).text()]
