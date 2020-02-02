@@ -2,6 +2,7 @@ import sys
 
 from equipo import Equipo
 from plantilla import Plantilla
+from jornada import Jornada
 from util import Util
 
 
@@ -18,7 +19,13 @@ def main():
 
     if rastreo == 'jornada':
         """ rastrea todos los partidos de la jornada pasada como argumento """
-        pass
+        if int(valor) < 1 or int(valor) > 38:
+            print("joranda no válida, valores admitidos entre 1 y 38")
+        else:
+            print("Rastreando jornada {}".format(valor))
+            jornada = Jornada(valor)
+            jornada.rastrea()
+
     elif rastreo == 'equipos':
         if valor == 'info':
             """ rastrea la informacion de todos los equipos """
