@@ -10,10 +10,13 @@ class Util:
         'Atletico-Madrid': 'Atlético',
         'Athletic-Bilbao': 'Athletic',
         'Real-Sociedad': 'Real Sociedad',
+        'R. Sociedad': 'Real Sociedad',
         'Alaves': 'Alavés',
         'Valencia-Cf': 'Valencia',
         'Leganes': 'Leganés',
-        'Real-Madrid': 'Real Madrid'
+        'Real-Madrid': 'Real Madrid',
+        'Real Betis': 'Betis',
+        'Real Valladolid': 'Valladolid'
     }
 
     __config = None  # objeto que almacenara la informacion del ini
@@ -79,3 +82,15 @@ class Util:
         """ devuelve el host que utilizara el socket para el envio de la informacion """
         cls.load_ini()
         return cls.__config['SOCKET']['host']
+
+    @classmethod
+    def get_id_jugador(cls, imagen, url):
+        """
+        devuelve el id que tiene el jugador el resultados futbol a partir de la ruta de la imagen o la url
+        hay algunos jugadores que no tienen el id en la url, pero esta en la imagen siempre y cuando
+        la imagen no sea una por defecto (avatar-player.jpg), entonces el id se saca de la url
+        """
+        if 'avatar-player' not in imagen:
+            return imagen[:imagen.find('?')].split('/')[-1].split('.')[0]
+
+        return url.split('-')[-1]

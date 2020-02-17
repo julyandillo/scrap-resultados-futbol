@@ -1,5 +1,10 @@
 # coding=utf-8
+import json
+
+from pyquery import PyQuery
+
 from rastreador import Rastreador
+from util import Util
 
 
 class Partido(Rastreador):
@@ -7,9 +12,83 @@ class Partido(Rastreador):
 
     def __init__(self, url):
         super().__init__(url)
-        self.url = url
 
         self.gethtml()
 
+        self.modelo = {
+            'type': 'partido',
+            'local': None,
+            'visitante': None,
+            'data': {}
+        }
+
     def rastrea(self):
-        print(self.url)
+        equipo_local = Util.equipo_equivalente_local(self.html('#marcador .equipo1 b').attr('title'))
+        equipo_visitante = Util.equipo_equivalente_local(self.html('#marcador .equipo2 b').attr('title'))
+
+        self.modelo['local'] = equipo_local
+        self.modelo['visitante'] = equipo_visitante
+
+        goles_local = int(self.html('.resultado span').eq(0).text())
+        goles_visitante = int(self.html('.resultado span').eq(1).text())
+
+        fecha = self.html('.jor-date').attr('content').replace('T', ' ').replace('+02:00', '')
+
+        texto_arbitro = self.html('.ar').eq(0).text()
+        arbitro = texto_arbitro[texto_arbitro.find(':')+1:].strip()
+
+        texto_arbitro = self.html('.ar').eq(1).text()
+        arbitro_var = texto_arbitro[texto_arbitro.find(':')+1:].strip()
+
+        texto_asistencia = self.html('.as>span').text()
+        asistencia = int(texto_asistencia[texto_asistencia.find(':')+1:].strip().split(' ')[0].replace('.', ''))
+
+        """
+        print(fecha, "->", equipo_local, goles_local, "-", goles_visitante, equipo_visitante)
+        print(arbitro, '| VAR:', arbitro_var)
+        print(asistencia, 'espectadores')
+        """
+
+        eventos = []
+        events = self.html('.evento>.event-content')
+        for content in events:
+            evento = PyQuery(content)
+
+            imagen_jugador = evento('img.event-avatar').attr('src')
+            url_jugador = evento('.name>a').attr('href')
+            jugador = Util.get_id_jugador(imagen_jugador, url_jugador)
+
+            minuto = int(evento('.minutos').text().replace('\'', '').split(' ')[1])
+
+            if evento.find('.event_1'):
+                tipo = 'gol'
+                # si es un gol hay que saber si es de penalti o en propia meta
+            elif evento.find('.event_11'):
+                tipo = 'gol_penalti'
+            elif evento.find('.event_8'):
+                tipo = 'tarjeta_amarilla'
+            elif evento.find('.event_7'):
+                tipo = 'sale'
+            elif evento.find('.event_6'):
+                tipo = 'entra'
+            else:
+                continue
+
+            eventos.append({
+                'tipo': tipo,
+                'jugador': jugador,
+                'minuto': minuto
+            })
+
+        self.modelo['data'] = {
+            'fecha': fecha,
+            'goles_local': goles_local,
+            'goles_visitante': goles_visitante,
+            'arbitro': arbitro,
+            'arbitro_var': arbitro_var,
+            'asistencia': asistencia,
+            'eventos': eventos
+        }
+
+        with open('log.json', 'w') as file:
+            file.write(json.dumps(self.modelo))

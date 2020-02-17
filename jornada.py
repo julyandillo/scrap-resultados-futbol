@@ -18,14 +18,13 @@ class Jornada(Rastreador):
         self.partidos = []
 
     def rastrea(self):
-        print(self.html.html())
+        partidos = self.html("#tabla1>tr.vevent")
+        # print(partidos)
 
-        partidos = self.html("#tabla1>tbody>tr.vevent")
-
-        for fila in partidos:
+        for fila in partidos[:1]:
             url = PyQuery(fila)
 
-            partido = Partido(url("td.cmn>a.more-box").attr("href"))
+            partido = Partido("https://www.resultados-futbol.com" + url("span.pt_match_name>a").attr("href"))
             partido.rastrea()
 
             self.partidos.append(partido)
