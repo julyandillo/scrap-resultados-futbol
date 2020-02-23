@@ -41,7 +41,10 @@ class Partido(Rastreador):
         arbitro_var = texto_arbitro[texto_arbitro.find(':')+1:].strip()
 
         texto_asistencia = self.html('.as>span').text()
-        asistencia = int(texto_asistencia[texto_asistencia.find(':')+1:].strip().split(' ')[0].replace('.', ''))
+        if texto_asistencia != '':
+            asistencia = int(texto_asistencia[texto_asistencia.find(':')+1:].strip().split(' ')[0].replace('.', ''))
+        else:
+            asistencia = 0
 
         """
         print(fecha, "->", equipo_local, goles_local, "-", goles_visitante, equipo_visitante)
@@ -50,6 +53,7 @@ class Partido(Rastreador):
         """
 
         eventos = []
+        jugador_entra = ''
         events = self.html('.evento>.event-content')
         for content in events:
             evento = PyQuery(content)
@@ -62,23 +66,36 @@ class Partido(Rastreador):
 
             if evento.find('.event_1'):
                 tipo = 'gol'
-                # si es un gol hay que saber si es de penalti o en propia meta
+            elif evento.find('.event_12'):
+                tipo = 'gol_pp'
             elif evento.find('.event_11'):
                 tipo = 'gol_penalti'
             elif evento.find('.event_8'):
                 tipo = 'tarjeta_amarilla'
-            elif evento.find('.event_7'):
-                tipo = 'sale'
+            elif evento.find('.event_9'):
+                tipo = 'tarjeta_roja'
             elif evento.find('.event_6'):
+                tipo = 'sale'
+            elif evento.find('.event_7'):
                 tipo = 'entra'
             else:
                 continue
 
-            eventos.append({
-                'tipo': tipo,
-                'jugador': jugador,
-                'minuto': minuto
-            })
+            if tipo not in ('sale', 'entra'):
+                eventos.append({
+                    'tipo': tipo,
+                    'jugador': jugador,
+                    'minuto': minuto
+                })
+            elif tipo == 'entra':
+                jugador_entra = jugador
+            elif tipo == 'sale':
+                eventos.append({
+                    'tipo': 'cambio',
+                    'minuto': minuto,
+                    'entra': jugador_entra,
+                    'sale': jugador
+                })
 
         self.modelo['data'] = {
             'fecha': fecha,
@@ -90,5 +107,7 @@ class Partido(Rastreador):
             'eventos': eventos
         }
 
+        """
         with open('log.json', 'w') as file:
             file.write(json.dumps(self.modelo))
+        """
