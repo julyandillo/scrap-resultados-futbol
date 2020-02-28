@@ -32,4 +32,4 @@ class Jornada(Rastreador):
     def envia(self, debug):
         """ se redefine para no enviar la jornada al completo, recorre la lista de partidos y los envia por separado """
         for partido in self.partidos:
-            partido.envia()
+            partido.envia(debug)

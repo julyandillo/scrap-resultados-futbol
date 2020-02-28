@@ -46,8 +46,8 @@ class Partido(Rastreador):
         else:
             asistencia = 0
 
-        """
         print(fecha, "->", equipo_local, goles_local, "-", goles_visitante, equipo_visitante)
+        """
         print(arbitro, '| VAR:', arbitro_var)
         print(asistencia, 'espectadores')
         """
@@ -62,7 +62,7 @@ class Partido(Rastreador):
             url_jugador = evento('.name>a').attr('href')
             jugador = Util.get_id_jugador(imagen_jugador, url_jugador)
 
-            minuto = int(evento('.minutos').text().replace('\'', '').split(' ')[1])
+            minuto = int(evento('.minutos').text().replace('\'', '').replace('minuto', '').strip())
 
             if evento.find('.event_1'):
                 tipo = 'gol'

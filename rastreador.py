@@ -24,7 +24,8 @@ class Rastreador(ABC):
         info = json.dumps(self.modelo)
 
         if debug is True:
-            print(info)
+            with open('log.json', 'a') as file:
+                file.write(info)
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as cliente:
             cliente.connect((Util.host(), Util.puerto()))

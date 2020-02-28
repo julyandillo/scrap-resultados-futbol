@@ -25,6 +25,7 @@ def main():
             print("Rastreando jornada {}".format(valor))
             jornada = Jornada(valor)
             jornada.rastrea()
+            jornada.envia(True)
 
     elif rastreo == 'equipos':
         if valor == 'info':
