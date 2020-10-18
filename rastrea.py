@@ -43,6 +43,7 @@ def main():
                 plantilla = Plantilla(Util.equipo_equivalente_rf(equipo))
                 plantilla.rastrea()
                 plantilla.envia(True)
+                print('----------------------------------------------')
     else:
         if valor == 'info':
             """ se rastreara la informacion del equipo pasado como argumento """

@@ -53,5 +53,6 @@ class Jugador(Rastreador):
         self.nombre_completo = box.eq(posiciones['nombre_completo']).text()
         self.pais_nacimiento = box.eq(posiciones['pais_nacimiento']).text()
         self.nacionalidad = box.eq(posiciones['nacionalidad']).text()
-        self.fecha_nacimiento = box.eq(posiciones['fecha_nacimiento']).text()
+        self.fecha_nacimiento = \
+            box.eq(posiciones['fecha_nacimiento']).text() if 'fecha_nacimiento' in posiciones.keys() else None
         self.posicion = self.__demarcacion[box.eq(posiciones['posicion']).text()]
