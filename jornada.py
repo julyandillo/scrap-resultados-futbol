@@ -24,10 +24,11 @@ class Jornada(Rastreador):
         for fila in partidos:
             url = PyQuery(fila)
 
-            partido = Partido("https://www.resultados-futbol.com" + url("span.pt_match_name>a").attr("href"))
-            partido.rastrea()
-
-            self.partidos.append(partido)
+            partido = Partido("https://www.resultados-futbol.com" + url("td.rstd>a").attr("href"))
+            if url("td.rstd>a").text().strip() not in ('Apl', 'x-x'):
+                """ solo se rastrean los partidos no aplazados """
+                partido.rastrea()
+                self.partidos.append(partido)
 
     def envia(self, debug):
         """ se redefine para no enviar la jornada al completo, recorre la lista de partidos y los envia por separado """
