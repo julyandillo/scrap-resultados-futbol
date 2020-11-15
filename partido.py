@@ -34,11 +34,11 @@ class Partido(Rastreador):
 
         fecha = self.html('.jor-date').attr('content').replace('T', ' ').replace('+02:00', '')
 
-        texto_arbitro = self.html('.ar').eq(0).text()
-        arbitro = texto_arbitro[texto_arbitro.find(':')+1:].strip()
+        arbitro = self.html('.referee').eq(0).text()
+        # arbitro = texto_arbitro[texto_arbitro.find(':')+1:].strip()
 
-        texto_arbitro = self.html('.ar').eq(1).text()
-        arbitro_var = texto_arbitro[texto_arbitro.find(':')+1:].strip()
+        arbitro_var = self.html('.referee').eq(4).text()
+        # arbitro_var = texto_arbitro[texto_arbitro.find(':')+1:].strip()
 
         texto_asistencia = self.html('.as>span').text()
         if texto_asistencia != '':
@@ -107,7 +107,5 @@ class Partido(Rastreador):
             'eventos': eventos
         }
 
-        """
         with open('log.json', 'w') as file:
-            file.write(json.dumps(self.modelo))
-        """
+            file.write(json.dumps(self.modelo, indent=4))

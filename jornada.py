@@ -21,7 +21,7 @@ class Jornada(Rastreador):
         partidos = self.html("#tabla1>tr.vevent")
         # print(partidos)
 
-        for fila in partidos:
+        for fila in partidos[:1]:
             url = PyQuery(fila)
 
             partido = Partido("https://www.resultados-futbol.com" + url("td.rstd>a").attr("href"))
