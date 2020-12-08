@@ -15,7 +15,9 @@ class Util:
         'Valencia-Cf': 'Valencia',
         'Leganes': 'Leganés',
         'Real-Madrid': 'Real Madrid',
-        'Cadiz': 'Cádiz'
+        'Cadiz': 'Cádiz',
+        'Real Valladolid': 'Valladolid',
+        'Real Betis': 'Betis',
     }
 
     __config = None  # objeto que almacenara la informacion del ini

@@ -53,7 +53,10 @@ class Partido(Rastreador):
         """
 
         eventos = []
-        jugador_entra = ''
+        cambio = {
+            'tipo': 'cambio'
+        }
+
         events = self.html('.evento>.event-content')
         for content in events:
             evento = PyQuery(content)
@@ -88,14 +91,15 @@ class Partido(Rastreador):
                     'minuto': minuto
                 })
             elif tipo == 'entra':
-                jugador_entra = jugador
+                cambio['entra'] = jugador
+                cambio['minuto'] = minuto
             elif tipo == 'sale':
-                eventos.append({
-                    'tipo': 'cambio',
-                    'minuto': minuto,
-                    'entra': jugador_entra,
-                    'sale': jugador
-                })
+                cambio['sale'] = jugador
+                cambio['minuto'] = minuto
+
+            if 'entra' in cambio.keys() and 'sale' in cambio.keys():
+                eventos.append(cambio)
+                cambio = {'tipo': 'cambio'}
 
         self.modelo['data'] = {
             'fecha': fecha,

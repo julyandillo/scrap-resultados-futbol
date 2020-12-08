@@ -21,12 +21,12 @@ class Jornada(Rastreador):
         partidos = self.html("#tabla1>tr.vevent")
         # print(partidos)
 
-        for fila in partidos[:1]:
+        for fila in partidos:
             url = PyQuery(fila)
 
             partido = Partido("https://www.resultados-futbol.com" + url("td.rstd>a").attr("href"))
-            if url("td.rstd>a").text().strip() not in ('Apl', 'x-x'):
-                """ solo se rastrean los partidos no aplazados """
+            if url("td.rstd>a").text().strip() not in ('Apl', 'x-x') and '-' in url("td.rstd>a").text().strip():
+                """ solo se rastrean los partidos no aplazados y los que ya se han jugado"""
                 partido.rastrea()
                 self.partidos.append(partido)
 
