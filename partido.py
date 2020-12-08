@@ -32,7 +32,7 @@ class Partido(Rastreador):
         goles_local = int(self.html('.resultado span').eq(0).text())
         goles_visitante = int(self.html('.resultado span').eq(1).text())
 
-        fecha = self.html('.jor-date').attr('content').replace('T', ' ').replace('+02:00', '')
+        fecha = self.html('.jor-date').attr('content').replace('T', ' ').replace('+02:00', '').replace('+01:00', '')
 
         arbitro = self.html('.referee').eq(0).text()
         # arbitro = texto_arbitro[texto_arbitro.find(':')+1:].strip()
